@@ -1,0 +1,47 @@
+---
+import { Icon } from 'astro-icon';
+---
+
+<dialog id="socialsModal" class="bg-[#161b22] text-white p-6 rounded-xl border border-white/10 max-w-md w-full shadow-2xl backdrop:bg-black/80">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold font-roboto lang-key" data-key="socials"></h2>
+    <form method="dialog"><button class="text-white/60 hover:text-white cursor-pointer text-base font-bold">✕</button></form>
+  </div>
+
+  <div class="flex flex-col gap-5 font-roboto text-white/80">
+    <p class="text-sm text-white/60 lang-key" data-key="socialsSub"></p>
+
+    <div class="w-full">
+      <a href="https://discord.com/users/402483602094555138" target="_blank">
+        <img src="https://lanyard.cnrad.dev/api/402483602094555138" alt="Discord Presence" class="w-full rounded-md shadow-md border border-white/10" />
+      </a>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3">
+      <a href="https://discordapp.com/users/402483602094555138" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-indigo-400 gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:discord" />
+        <span class="text-xs">Discord</span>
+      </a>
+      <a href="https://twitch.tv/newtox_" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-purple-400 gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:twitch" />
+        <span class="text-xs">Twitch</span>
+      </a>
+      <a href="https://open.spotify.com" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-green-400 gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:spotify" />
+        <span class="text-xs">Spotify</span>
+      </a>
+      <a href="https://steamcommunity.com/id/Newtox" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-sky-400 gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:steam" />
+        <span class="text-xs">Steam</span>
+      </a>
+      <a href="https://github.com/newtox" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-white gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:github" />
+        <span class="text-xs">GitHub</span>
+      </a>
+      <a href="https://twitter.com/newtox261" target="_blank" class="flex flex-col items-center justify-center p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition text-white/80 hover:text-sky-300 gap-2">
+        <Icon class="w-6 h-6" name="simple-icons:twitter" />
+        <span class="text-xs">Twitter</span>
+      </a>
+    </div>
+  </div>
+</dialog>

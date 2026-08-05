@@ -1,0 +1,17 @@
+{
+  "about": "About Me",
+  "socials": "Socials & Presence",
+  "technologies": "Technologies & Tools",
+  "switchLang": "Switch Language",
+  
+  "profileDesc": "22-year-old developer from Germany 🇩🇪",
+  "statusReady": "Ready to code & play",
+  
+  "socialsSub": "Find me on other platforms or check my live status:",
+  "techSub": "A complete overview of technologies, tools, and systems I use:",
+  
+  "aboutTitle": "About Me",
+  "aboutText": "Hey! I'm Justin, a 22-year-old developer from Germany. I love building custom tools, open-source software, and managing game servers.",
+  
+  "footer": "Justin Lyschik. Built with Astro & Tailwind."
+}

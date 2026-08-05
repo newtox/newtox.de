@@ -1,0 +1,136 @@
+---
+import { Icon } from "astro-icon";
+
+interface Technologie {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+const techCategories: { title: string; items: Technologie[] }[] = [
+  {
+    title: "Programming Languages",
+    items: [
+      { name: "Dart", color: "hover:text-white", icon: "" },
+      { name: "Go", color: "hover:text-white", icon: "" },
+      { name: "JavaScript", color: "hover:text-white", icon: "" },
+      { name: "Lua", color: "hover:text-white", icon: "" },
+      { name: "PHP", color: "hover:text-white", icon: "" },
+      { name: "Python", color: "hover:text-white", icon: "" },
+      { name: "TypeScript", color: "hover:text-white", icon: "" },
+    ],
+  },
+  {
+    title: "Web Technologies",
+    items: [
+      { name: "HTML5", color: "hover:text-white", icon: "" },
+      { name: "CSS3", color: "hover:text-white", icon: "" },
+      { name: "Sass", color: "hover:text-white", icon: "" },
+      { name: "Markdown", color: "hover:text-white", icon: "" },
+      { name: "JSON", color: "hover:text-white", icon: "" },
+      { name: "YAML", color: "hover:text-white", icon: "" },
+    ],
+  },
+  {
+    title: "Frameworks & Libraries",
+    items: [
+      { name: "Astro", color: "hover:text-white", icon: "" },
+      { name: "Bootstrap", color: "hover:text-white", icon: "" },
+      { name: "Flutter", color: "hover:text-white", icon: "" },
+      { name: "Laravel", color: "hover:text-white", icon: "" },
+      { name: "Next.js", color: "hover:text-white", icon: "" },
+      { name: "Node.js", color: "hover:text-white", icon: "" },
+      { name: "PyTorch", color: "hover:text-white", icon: "" },
+      { name: "React", color: "hover:text-white", icon: "" },
+      { name: "Svelte", color: "hover:text-white", icon: "" },
+      { name: "Tailwind CSS", color: "hover:text-white", icon: "" },
+    ],
+  },
+  {
+    title: "Package Managers",
+    items: [
+      { name: "Composer", color: "hover:text-white", icon: "" },
+      { name: "Chocolatey", color: "hover:text-white", icon: "" },
+      { name: "DNF", color: "hover:text-white", icon: "" },
+      { name: "Flatpak", color: "hover:text-white", icon: "" },
+      { name: "Nix", color: "hover:text-white", icon: "" },
+      { name: "NPM", color: "hover:text-white", icon: "" },
+      { name: "NuGet", color: "hover:text-white", icon: "" },
+      { name: "pnpm", color: "hover:text-white", icon: "" },
+      { name: "Yarn", color: "hover:text-white", icon: "" },
+    ],
+  },
+  {
+    title: "Utilities & System",
+    items: [
+      { name: "Discover", color: "hover:text-white", icon: "" },
+      { name: "Dolphin", color: "hover:text-white", icon: "" },
+      { name: "Mullvad VPN", color: "hover:text-white", icon: "" },
+      { name: "htop", color: "hover:text-white", icon: "" },
+      { name: "Termius", color: "hover:text-white", icon: "" },
+    ],
+  },
+  {
+    title: "Operating Systems",
+    items: [
+      { name: "Debian", color: "hover:text-white", icon: "" },
+      { name: "Nobara Linux", color: "hover:text-white", icon: "" },
+      { name: "SteamOS", color: "hover:text-white", icon: "" },
+      { name: "Ubuntu", color: "hover:text-white", icon: "" },
+      { name: "Windows", color: "hover:text-white", icon: "" },
+    ],
+  },
+];
+---
+
+<dialog id="techModal" class="bg-[#161b22] text-white p-6 rounded-xl border border-white/10 max-w-2xl w-full shadow-2xl backdrop:bg-black/80">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold font-roboto lang-key" data-key="technologies"></h2>
+    <form method="dialog"><button class="text-white/60 hover:text-white cursor-pointer text-base font-bold">✕</button></form>
+  </div>
+
+  <div class="flex flex-col gap-3 font-roboto text-white/80 max-h-[65vh] overflow-y-auto pr-2">
+    <p class="text-sm text-white/60 mb-1 lang-key" data-key="techSub"></p>
+
+    <div class="flex flex-col gap-2">
+      {
+        techCategories.map((category) => (
+          <details class="group custom-details bg-white/5 border border-white/10 rounded-md overflow-hidden">
+            <summary class="flex justify-between items-center p-3 cursor-pointer text-sm font-semibold text-white select-none hover:bg-white/10 transition">
+              <span>{category.title}</span>
+              <span class="transform group-open:rotate-180 transition-transform duration-300 text-xs text-white/60">▼</span>
+            </summary>
+            <div class="dropdown-content">
+              <div class="p-3 pt-1 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-2 bg-black/20">
+                {category.items.map((tech) => (
+                  <div class={`flex items-center gap-2 p-1.5 rounded transition-colors duration-150 ${tech.color} cursor-pointer`}>
+                    <!-- <Icon class="w-4 h-4 shrink-0" name={tech.icon} /> -->
+                    <span class="text-xs font-medium truncate">{tech.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .custom-details .dropdown-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+  .custom-details .dropdown-content > div {
+    overflow: hidden;
+  }
+
+  .custom-details[open] .dropdown-content {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+</style>
