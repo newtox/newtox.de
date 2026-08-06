@@ -39,6 +39,9 @@ importers:
       '@iconify-json/fontisto':
         specifier: ^1.2.1
         version: 1.2.1
+      '@iconify-json/mdi':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@iconify-json/simple-icons':
         specifier: ^1.2.93
         version: 1.2.93
@@ -482,6 +485,9 @@ packages:
 
   '@iconify-json/fontisto@1.2.1':
     resolution: {integrity: sha512-RoZA/Cqey08bGWB5MD8KPMQuic4ZA3iH3ruuFI85bi0svmEXO9npnTTkNwnRXLM/DLcUYJSEJ9wNrvSYgKs+Jg==}
+
+  '@iconify-json/mdi@1.2.3':
+    resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
 
   '@iconify-json/simple-icons@1.2.93':
     resolution: {integrity: sha512-/XhANjfGYOuqvSR3TmUnkQkINvQ4GVjVuukvymRbxtVFBvIq/yiXJqCDycKcQPT401OYT9H2vIY6ihAlz1QIAw==}
@@ -2863,6 +2869,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fontisto@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mdi@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
 
