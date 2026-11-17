@@ -16,8 +16,8 @@ export const projects: Project[] = [
     repo: 'https://github.com/newtox/newtox.de',
     tag: { en: 'Personal website', de: 'Persönliche Website' },
     desc: {
-      en: 'This page. Click anywhere, switch teams and see what I am playing right now.',
-      de: 'Diese Seite. Klick irgendwohin, wechsel das Team und sieh, was ich gerade spiele.',
+      en: 'My personal website, the one you are looking at.',
+      de: 'Meine persönliche Website, die du gerade siehst.',
     },
     main: 'Astro',
     sub: 'TypeScript',

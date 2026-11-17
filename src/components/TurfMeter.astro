@@ -3,9 +3,6 @@ import T from './T.astro'
 ---
 
 <div class="meter" id="turf" data-no-ink hidden>
-  <span class="label">
-    <T k="turf" />
-  </span>
   <div class="row">
     <span class="pct mine">
       <T k="yours" /> <b data-mine>0.0%</b>
@@ -67,13 +64,6 @@ import T from './T.astro'
   .meter[hidden] {
     display: none;
   }
-  .label {
-    font-weight: 900;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #fff9;
-  }
   .row {
     display: flex;
     align-items: center;
@@ -131,9 +121,6 @@ import T from './T.astro'
     background: #fff2;
   }
   @media (max-width: 560px) {
-    .label {
-      display: none;
-    }
     .pct {
       font-size: 0.7rem;
     }

@@ -45,7 +45,7 @@ const year = new Date().getFullYear()
           </span>
           <T k="switchTeam" />
         </button>
-        <button type="button" data-reroll aria-label="Splatfest">
+        <button type="button" data-reroll aria-label="Shuffle colors">
           🎲 <span data-pair-name></span>
         </button>
         <button type="button" data-lang>
@@ -67,9 +67,6 @@ const year = new Date().getFullYear()
         </Sticker>
         <p class="about">
           <T k="aboutText" />
-        </p>
-        <p class="hint">
-          <T k="hint" />
         </p>
       </section>
     </div>
@@ -285,11 +282,6 @@ const year = new Date().getFullYear()
     font-weight: 800;
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
-  }
-  .hint {
-    margin: 14px 0 0;
-    font-size: 0.85rem;
-    color: #fff8;
   }
   footer {
     text-align: center;

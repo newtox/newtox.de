@@ -25,26 +25,11 @@ import T from './T.astro'
         <span data-l="en">{p.desc.en}</span>
         <span data-l="de">{p.desc.de}</span>
       </p>
-      <dl>
-        <div>
-          <dt>
-            <T k="main" />
-          </dt>
-          <dd>{p.main}</dd>
-        </div>
-        <div>
-          <dt>
-            <T k="sub" />
-          </dt>
-          <dd>{p.sub}</dd>
-        </div>
-        <div>
-          <dt>
-            <T k="special" />
-          </dt>
-          <dd>{p.special}</dd>
-        </div>
-      </dl>
+      <ul class="stack">
+        <li>{p.main}</li>
+        <li>{p.sub}</li>
+        <li>{p.special}</li>
+      </ul>
       <footer>
         <a href={p.repo} target="_blank" rel="noopener">
           <T k="code" /> ↗
@@ -123,32 +108,21 @@ import T from './T.astro'
     line-height: 1.45;
     flex: 1;
   }
-  dl {
+  .stack {
+    list-style: none;
     margin: 0;
-    display: grid;
-    gap: 4px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    background: #0006;
-  }
-  dl div {
+    padding: 0;
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    font-size: 0.82rem;
+    flex-wrap: wrap;
+    gap: 6px;
   }
-  dt {
-    font-weight: 900;
-    text-transform: uppercase;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    color: #fff8;
-    align-self: center;
-  }
-  dd {
-    margin: 0;
+  .stack li {
+    font-size: 0.75rem;
     font-weight: 700;
-    text-align: right;
+    padding: 3px 9px;
+    border-radius: 99px;
+    background: #fff1;
+    color: #fffd;
   }
   footer {
     display: flex;
