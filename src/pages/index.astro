@@ -109,7 +109,7 @@ const year = new Date().getFullYear()
 </Layout>
 
 <script>
-  import { state, swapTeam, reroll, splat } from '../scripts/theme'
+  import { state, swapTeam, reroll } from '../scripts/theme'
   import { toggleLang } from '../scripts/lang'
 
   const pairName = document.querySelector<HTMLElement>('[data-pair-name]')!
@@ -123,30 +123,6 @@ const year = new Date().getFullYear()
   })
   document.querySelector('[data-reroll]')!.addEventListener('click', reroll)
   document.querySelector('[data-lang]')!.addEventListener('click', toggleLang)
-
-  const konami = [
-    'ArrowUp',
-    'ArrowUp',
-    'ArrowDown',
-    'ArrowDown',
-    'ArrowLeft',
-    'ArrowRight',
-    'ArrowLeft',
-    'ArrowRight',
-    'b',
-    'a',
-  ]
-  let pos = 0
-  window.addEventListener('keydown', (e) => {
-    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key
-    pos = k === konami[pos] ? pos + 1 : k === konami[0] ? 1 : 0
-    if (pos === konami.length) {
-      pos = 0
-      for (let i = 0; i < 70; i++) {
-        setTimeout(() => splat(Math.random() * innerWidth, Math.random() * innerHeight), i * 28)
-      }
-    }
-  })
 </script>
 
 <style>
