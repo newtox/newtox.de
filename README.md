@@ -11,13 +11,14 @@ This work is licensed under a
 
 # newtox.de
 
-Personal website of Newtox aka Justin. Built with Astro as a fully static site, with a Splatfest-inspired look: click anywhere to ink the page, switch teams, and watch the live Discord lobby card. The interactive parts are small vanilla TypeScript scripts, everything else is plain HTML.
+Personal website of Newtox aka Justin. Built with Astro as a fully static site, with a Splatfest-inspired look: click anywhere to splash ink, switch colors, and see my live Discord status. The interactive parts are small vanilla TypeScript scripts, everything else is plain HTML.
 
 ## Features
 
-- Ink canvas with turf meter, team switching and random Splatfest color pairs
+- Ink canvas with a coverage bar, an opposing color that splashes back, and random Splatfest color pairs
 - Live Discord presence (status, game, Spotify) via [Lanyard](https://github.com/Phineas/lanyard)
-- Projects as loadout cards, tech stack as filterable gear
+- Projects loaded from the repositories pinned on GitHub (description, topics, languages, stars)
+- Tech stack with filter tabs
 - English and German, picked from the browser language
 - Self-hosted fonts (Rubik, Rubik Spray Paint), no requests to Google Fonts
 
@@ -58,7 +59,7 @@ The image only contains the static files and a small Caddy that serves them on p
 
 For the pinned repositories the Action uses the repository secret `PINNED_REPOS_TOKEN` if it exists, otherwise its own `GITHUB_TOKEN`.
 
-On the server, start the container with `docker compose up -d` (see `docker-compose.yml`, it listens on `127.0.0.1:8085`) and point the main Caddy at it:
+On the server, run `docker-compose.yml` as a stack in Portainer or with `docker compose up -d`. The container listens on `127.0.0.1:8085`, the main Caddy points at it:
 
 ```
 newtox.de {
@@ -68,7 +69,7 @@ newtox.de {
 
 ## Editing content
 
-- Projects: pin or unpin repositories on GitHub, then rebuild
+- Projects: pin or unpin repositories, or change their description and topics on GitHub. The site picks it up with the next build (every night, or right away via Actions → Docker image → Run workflow)
 - Tech stack: `src/data/gear.ts`
 - Social links and Discord ID: `src/data/socials.ts`
 - Texts in both languages: `src/data/i18n.ts`
