@@ -1,7 +1,7 @@
 export const dict = {
   en: {
-    tagline: '22-year-old developer from Germany',
-    intro: 'I build tools, apps and Discord bots. Click anywhere to splash some ink.',
+    tagline: '22 · Streamer · Developer · Gamer',
+    intro: 'Just click anywhere.',
     switchLang: 'Deutsch',
     switchTeam: 'Switch color',
     lobby: 'Discord',
@@ -21,7 +21,7 @@ export const dict = {
     playing: 'Playing',
     elapsed: 'elapsed',
     code: 'Code',
-    aboutText: "Hey, I'm Justin! I like building projects from start to finish and hosting them myself.",
+    aboutText: "Hi, I'm Justin. I code in my free time, mostly small things for myself and my friends.",
     yours: 'You',
     them: 'Them',
     wipe: 'Clear',
@@ -29,8 +29,8 @@ export const dict = {
     all: 'All',
   },
   de: {
-    tagline: '22-jähriger Entwickler aus Deutschland',
-    intro: 'Ich baue Tools, Apps und Discord-Bots. Klick irgendwohin, um Farbe zu verspritzen.',
+    tagline: '22 · Streamer · Entwickler · Gamer',
+    intro: 'Klick einfach irgendwo hin.',
     switchLang: 'English',
     switchTeam: 'Farbe wechseln',
     lobby: 'Discord',
@@ -50,7 +50,8 @@ export const dict = {
     playing: 'Spielt',
     elapsed: 'vergangen',
     code: 'Code',
-    aboutText: 'Hey, ich bin Justin! Ich baue gern Projekte von Anfang bis Ende und hoste sie selbst.',
+    aboutText:
+      'Hi, ich bin Justin. Ich programmiere in meiner Freizeit, meistens Kleinigkeiten für mich und meine Freunde.',
     yours: 'Du',
     them: 'Gegner',
     wipe: 'Leeren',
