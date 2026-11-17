@@ -1,0 +1,7 @@
+services:
+  web:
+    image: ghcr.io/newtox/newtox.de:latest
+    container_name: newtox-de
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8085:80

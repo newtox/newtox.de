@@ -50,6 +50,22 @@ pnpm build
 
 The static site is written to `dist/`. Serve that folder with Caddy or any static web server.
 
+## Deployment
+
+Every push to `main`, and once a day at night, a GitHub Action builds a Docker image with the finished site and pushes it to `ghcr.io/newtox/newtox.de`. The daily build picks up changes to the pinned repositories. Watchtower on the server pulls new images automatically.
+
+The image only contains the static files and a small Caddy that serves them on port 80.
+
+For the pinned repositories the Action uses the repository secret `PINNED_REPOS_TOKEN` if it exists, otherwise its own `GITHUB_TOKEN`.
+
+On the server, start the container with `docker compose up -d` (see `docker-compose.yml`, it listens on `127.0.0.1:8085`) and point the main Caddy at it:
+
+```
+newtox.de {
+	reverse_proxy 127.0.0.1:8085
+}
+```
+
 ## Editing content
 
 - Projects: pin or unpin repositories on GitHub, then rebuild
