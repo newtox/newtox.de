@@ -25,13 +25,13 @@ export type Presence = {
   } | null
 }
 
-export function subscribe(onData: (p: Presence) => void) {
+export function subscribe(onData: (p: Presence) => void, onMissing: () => void) {
   let beat: ReturnType<typeof setInterval> | undefined
   let retry = 0
 
   fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
     .then((r) => r.json())
-    .then((j) => j.success && onData(j.data))
+    .then((j) => (j.success ? onData(j.data) : j.error?.code === 'user_not_monitored' && onMissing()))
     .catch(() => {})
 
   function connect() {

@@ -56,6 +56,9 @@ import T from './T.astro'
   <p class="idle" data-idle hidden>
     <T k="nothingRunning" />
   </p>
+  <p class="idle" data-missing hidden>
+    <T k="notMonitored" />
+  </p>
 </div>
 
 <script>
@@ -131,10 +134,13 @@ import T from './T.astro'
     if (start) $('[data-game-time]').textContent = clock(now - start)
   }
 
-  subscribe(render)
+  subscribe(render, () => {
+    $('[data-status-text]').replaceChildren(bi('offline'))
+    $('[data-missing]').hidden = false
+  })
   setInterval(tick, 1000)
   setTimeout(() => {
-    if (!current) {
+    if (!current && $('[data-missing]').hidden) {
       $('[data-status-text]').replaceChildren(bi('offline'))
       $('[data-idle]').hidden = false
     }
