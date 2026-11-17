@@ -16,6 +16,8 @@ export function mountInk(canvas: HTMLCanvasElement) {
   let grid = new Uint8Array(0)
   let down = false
   let last = { x: 0, y: 0 }
+  let cover = { mine: 0, theirs: 0 }
+  let lastActive = 0
 
   const colorOf = (team: Team) => (team === 0 ? state().a : state().b)
 
@@ -112,6 +114,7 @@ export function mountInk(canvas: HTMLCanvasElement) {
     const pb = (b / total) * 100
     const mine = state().team === 0 ? pa : pb
     const theirs = state().team === 0 ? pb : pa
+    cover = { mine, theirs }
     window.dispatchEvent(new CustomEvent('ink:coverage', { detail: { mine, theirs } }))
   }
 
@@ -140,6 +143,7 @@ export function mountInk(canvas: HTMLCanvasElement) {
     const r = big ? base * (0.045 + Math.random() * 0.05) : base * (0.012 + Math.random() * 0.01)
     const s: Splat = { x: x / w, y: y / h, r, team, seed: (Math.random() * 2 ** 32) >>> 0, drops: big }
     splats.push(s)
+    if (team === state().team) lastActive = Date.now()
     if (splats.length > MAX) {
       splats = splats.slice(-MAX)
       redrawAll()
@@ -202,6 +206,13 @@ export function mountInk(canvas: HTMLCanvasElement) {
     clearTimeout(t)
     t = setTimeout(resize, 120)
   })
+
+  setInterval(() => {
+    if (Date.now() - lastActive > 4000) return
+    if (cover.theirs >= cover.mine * 0.9) return
+    const enemy: Team = state().team === 0 ? 1 : 0
+    add(Math.random() * w, Math.random() * h, enemy, true)
+  }, 600)
 
   resize()
 }
