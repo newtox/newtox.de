@@ -1,7 +1,7 @@
 export const dict = {
   en: {
     tagline: '22-year-old developer from Germany',
-    intro: 'I build my own tools, chat apps, Discord bots and game servers. Click anywhere to ink the page.',
+    intro: 'I build tools, apps and Discord bots. Click anywhere to ink the page.',
     switchLang: 'Deutsch',
     switchTeam: 'Switch team',
     lobby: 'Lobby',
@@ -22,8 +22,7 @@ export const dict = {
     sub: 'Sub',
     special: 'Special',
     code: 'Code',
-    aboutText:
-      "Hey! I'm Justin. I like building things end to end: a Rust chat server with its own desktop and Android apps, a Discord bot with a Laravel dashboard, and the servers they all run on. Most of it lives on my own box behind Caddy and Docker.",
+    aboutText: "Hey, I'm Justin! I like building projects from start to finish and hosting them myself.",
     turf: 'Turf inked',
     yours: 'You',
     them: 'Them',
@@ -34,8 +33,7 @@ export const dict = {
   },
   de: {
     tagline: '22-jähriger Entwickler aus Deutschland',
-    intro:
-      'Ich baue eigene Tools, Chat-Apps, Discord-Bots und Game-Server. Klick irgendwohin, um die Seite einzufärben.',
+    intro: 'Ich baue Tools, Apps und Discord-Bots. Klick irgendwohin, um die Seite einzufärben.',
     switchLang: 'English',
     switchTeam: 'Team wechseln',
     lobby: 'Lobby',
@@ -57,7 +55,7 @@ export const dict = {
     special: 'Spezial',
     code: 'Code',
     aboutText:
-      'Hey! Ich bin Justin. Ich baue Dinge gern von vorne bis hinten: einen Chat-Server in Rust mit eigenen Desktop- und Android-Apps, einen Discord-Bot mit Laravel-Dashboard und die Server, auf denen das alles läuft. Das meiste davon läuft auf meiner eigenen Kiste hinter Caddy und Docker.',
+      'Hey, ich bin Justin! Ich baue gern Projekte von Anfang bis Ende und hoste sie selbst.',
     turf: 'Eingefärbt',
     yours: 'Du',
     them: 'Gegner',
