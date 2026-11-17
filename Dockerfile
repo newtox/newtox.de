@@ -6,7 +6,8 @@ RUN pnpm install --frozen-lockfile
 COPY astro.config.mjs tsconfig.json ./
 COPY public ./public
 COPY src ./src
-RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN pnpm build
+ARG BUILD_ID
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN echo "build $BUILD_ID" && pnpm build
 
 FROM public.ecr.aws/docker/library/caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
