@@ -163,7 +163,7 @@ export function mountInk(canvas: HTMLCanvasElement) {
     last = { x: e.clientX, y: e.clientY }
     const team = state().team
     add(e.clientX, e.clientY, team, true)
-    if (Math.random() < 0.3) {
+    if (Math.random() < 0.6) {
       const enemy: Team = team === 0 ? 1 : 0
       setTimeout(() => add(Math.random() * w, Math.random() * h, enemy, true), 300 + Math.random() * 500)
     }
