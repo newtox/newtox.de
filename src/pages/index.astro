@@ -78,6 +78,13 @@ const year = new Date().getFullYear()
       <Sticker tilt={-1.5}>
         <T k="loadout" />
       </Sticker>
+      <p class="lead">
+        <T k="loadoutIntro" />{' '}
+        <a href="https://github.com/newtox" target="_blank" rel="noopener">
+          GitHub
+        </a>
+        .
+      </p>
       <Loadout />
     </section>
 
@@ -267,6 +274,17 @@ const year = new Date().getFullYear()
     margin: 0;
     line-height: 1.6;
     color: #fffe;
+  }
+  .lead {
+    margin: 0 0 16px;
+    color: #fffc;
+    line-height: 1.5;
+  }
+  .lead a {
+    color: var(--mine);
+    font-weight: 800;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
   }
   .hint {
     margin: 14px 0 0;
