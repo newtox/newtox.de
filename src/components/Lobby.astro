@@ -17,48 +17,50 @@ import T from './T.astro'
     </div>
   </div>
 
-  <div class="slot" data-spotify hidden>
-    <img class="art" alt="" width="64" height="64" data-art />
-    <div class="info">
-      <span class="kicker">
-        <T k="listening" />
-      </span>
-      <a class="title" target="_blank" rel="noopener" data-song></a>
-      <span class="sub" data-artist></span>
-      <div class="progress">
-        <div data-progress></div>
+  <div class="activity">
+    <div class="slot" data-spotify hidden>
+      <img class="art" alt="" width="64" height="64" data-art />
+      <div class="info">
+        <span class="kicker">
+          <T k="listening" />
+        </span>
+        <a class="title" target="_blank" rel="noopener" data-song></a>
+        <span class="sub" data-artist></span>
+        <div class="progress">
+          <div data-progress></div>
+        </div>
+        <div class="times">
+          <span data-pos></span>
+          <span data-len></span>
+        </div>
       </div>
-      <div class="times">
-        <span data-pos></span>
-        <span data-len></span>
+    </div>
+
+    <div class="slot" data-game hidden>
+      <img class="art" alt="" width="64" height="64" data-game-art />
+      <div class="art placeholder" data-game-placeholder>
+        🎮
+      </div>
+      <div class="info">
+        <span class="kicker">
+          <T k="playing" />
+        </span>
+        <span class="title" data-game-name></span>
+        <span class="sub" data-game-details></span>
+        <span class="sub" data-game-state></span>
+        <span class="sub mono" data-game-time-wrap>
+          <span data-game-time></span> <T k="elapsed" />
+        </span>
       </div>
     </div>
-  </div>
 
-  <div class="slot" data-game hidden>
-    <img class="art" alt="" width="64" height="64" data-game-art />
-    <div class="art placeholder" data-game-placeholder>
-      🎮
-    </div>
-    <div class="info">
-      <span class="kicker">
-        <T k="playing" />
-      </span>
-      <span class="title" data-game-name></span>
-      <span class="sub" data-game-details></span>
-      <span class="sub" data-game-state></span>
-      <span class="sub mono" data-game-time-wrap>
-        <span data-game-time></span> <T k="elapsed" />
-      </span>
-    </div>
+    <p class="idle" data-idle hidden>
+      <T k="nothingRunning" />
+    </p>
+    <p class="idle" data-missing hidden>
+      <T k="notMonitored" />
+    </p>
   </div>
-
-  <p class="idle" data-idle hidden>
-    <T k="nothingRunning" />
-  </p>
-  <p class="idle" data-missing hidden>
-    <T k="notMonitored" />
-  </p>
 </div>
 
 <script>
@@ -151,8 +153,16 @@ import T from './T.astro'
   .lobby {
     --ring: #7a7686;
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+  }
+  .activity {
+    flex: 1 1 300px;
+    display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
+    min-width: 0;
   }
   .lobby[data-status='online'] {
     --ring: #3ee07a;
@@ -167,6 +177,8 @@ import T from './T.astro'
     display: none !important;
   }
   .me {
+    flex: 0 1 auto;
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 14px;

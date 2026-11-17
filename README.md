@@ -33,6 +33,15 @@ pnpm dev
 
 Without Nix you need Node.js 22.23 or newer and pnpm.
 
+## GitHub token
+
+The projects section shows the repositories pinned on the GitHub profile. They are fetched once at build time through the GitHub GraphQL API, which needs a token. Without a token, or if GitHub cannot be reached, the build still works and the projects section is left out.
+
+1. Create a fine-grained token at https://github.com/settings/personal-access-tokens with "Public repositories (read-only)" access and no extra permissions
+2. Copy `.env.example` to `.env` and put the token in `GITHUB_TOKEN`
+
+The token is only used during the build and never ends up on the website.
+
 ## Build
 
 ```bash
@@ -43,7 +52,7 @@ The static site is written to `dist/`. Serve that folder with Caddy or any stati
 
 ## Editing content
 
-- Projects: `src/data/projects.ts`
+- Projects: pin or unpin repositories on GitHub, then rebuild
 - Tech stack: `src/data/gear.ts`
 - Social links and Discord ID: `src/data/socials.ts`
 - Texts in both languages: `src/data/i18n.ts`

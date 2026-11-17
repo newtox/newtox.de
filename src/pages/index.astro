@@ -10,8 +10,10 @@ import Lobby from '../components/Lobby.astro'
 import Loadout from '../components/Loadout.astro'
 import Gear from '../components/Gear.astro'
 import Socials from '../components/Socials.astro'
+import { pinnedRepos } from '../data/github'
 
 const year = new Date().getFullYear()
+const repos = await pinnedRepos('newtox')
 ---
 
 <Layout
@@ -35,6 +37,9 @@ const year = new Date().getFullYear()
         <T k="tagline" />
       </p>
       <p class="intro">
+        <T k="aboutText" />
+      </p>
+      <p class="hint">
         <T k="intro" />
       </p>
       <div class="controls">
@@ -54,36 +59,28 @@ const year = new Date().getFullYear()
       </div>
     </section>
 
-    <div class="duo">
-      <section class="panel">
-        <Sticker tilt={-3}>
-          <T k="lobby" />
-        </Sticker>
-        <Lobby />
-      </section>
-      <section class="panel">
-        <Sticker tilt={2} alt>
-          <T k="about" />
-        </Sticker>
-        <p class="about">
-          <T k="aboutText" />
-        </p>
-      </section>
-    </div>
-
     <section class="panel">
-      <Sticker tilt={-1.5}>
-        <T k="loadout" />
+      <Sticker tilt={-3}>
+        <T k="lobby" />
       </Sticker>
-      <p class="lead">
-        <T k="loadoutIntro" />{' '}
-        <a href="https://github.com/newtox" target="_blank" rel="noopener">
-          GitHub
-        </a>
-        .
-      </p>
-      <Loadout />
+      <Lobby />
     </section>
+
+    {repos.length > 0 && (
+      <section class="panel">
+        <Sticker tilt={-1.5}>
+          <T k="loadout" />
+        </Sticker>
+        <p class="lead">
+          <T k="loadoutIntro" />{' '}
+          <a href="https://github.com/newtox" target="_blank" rel="noopener">
+            GitHub
+          </a>
+          .
+        </p>
+        <Loadout repos={repos} />
+      </section>
+    )}
 
     <section class="panel">
       <Sticker tilt={2.5} alt>
@@ -238,15 +235,12 @@ const year = new Date().getFullYear()
     background: var(--theirs);
     margin-left: -5px;
   }
-  .duo {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-  }
-  .about {
-    margin: 0;
-    line-height: 1.6;
-    color: #fffe;
+  .hint {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fffb;
+    text-shadow: 0 2px 0 #000;
   }
   .lead {
     margin: 0 0 16px;
@@ -265,9 +259,6 @@ const year = new Date().getFullYear()
     color: #fff8;
   }
   @media (max-width: 760px) {
-    .duo {
-      grid-template-columns: 1fr;
-    }
     main {
       padding-top: 28px;
     }
