@@ -1,94 +1,289 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Profile from "../components/header/Profile.astro";
-import Socials from "../components/header/Socials.astro";
-import About from "../components/information/About.astro";
-import Technologies from "../components/information/Technologies.astro";
-import Footer from "../components/Footer.astro";
-import { useTranslations } from "../i18n/translations.js";
+import Layout from '../layouts/Layout.astro'
+import T from '../components/T.astro'
+import Sticker from '../components/Sticker.astro'
+import InkCanvas from '../components/InkCanvas.astro'
+import TurfMeter from '../components/TurfMeter.astro'
+import TeamWave from '../components/TeamWave.astro'
+import Klecks from '../components/Klecks.astro'
+import Lobby from '../components/Lobby.astro'
+import Loadout from '../components/Loadout.astro'
+import Gear from '../components/Gear.astro'
+import Socials from '../components/Socials.astro'
 
-const t = useTranslations("en");
+const year = new Date().getFullYear()
 ---
 
-<Layout title="newtox.de">
-  <main class="min-h-screen flex flex-col items-center justify-center p-4 max-w-xl mx-auto my-auto gap-6">
-    
-    <div class="w-full">
-      <Profile />
+<Layout
+  title="newtox.de · Justin Lyschik"
+  description="Personal website of Newtox aka Justin Lyschik, developer from Germany."
+>
+  <InkCanvas />
+  <TeamWave />
+
+  <main>
+    <section class="hero">
+      <svg class="splash" viewBox="0 0 400 200" aria-hidden="true">
+        <path d="M60 110c-30-6-52-30-30-52 18-18 44 2 60-12 20-18 10-40 44-42 30-2 28 26 58 26s34-30 66-22c36 9 18 40 44 52 28 13 70 4 72 34 2 34-42 28-52 48-10 22 10 44-18 54-26 9-38-18-64-14-28 4-34 30-64 26-34-5-22-36-50-42-26-6-58 8-68-14-10-20 18-34 2-42Z"></path>
+        <circle cx="356" cy="40" r="10"></circle>
+        <circle cx="378" cy="62" r="5"></circle>
+        <circle cx="22" cy="168" r="8"></circle>
+      </svg>
+      <h1>Newtox</h1>
+      <p class="name">Justin Lyschik</p>
+      <p class="tagline">
+        <T k="tagline" />
+      </p>
+      <p class="intro">
+        <T k="intro" />
+      </p>
+      <div class="controls">
+        <button type="button" class="team" data-team-btn>
+          <span class="dots">
+            <i class="m"></i>
+            <i class="t"></i>
+          </span>
+          <T k="switchTeam" />
+        </button>
+        <button type="button" data-reroll aria-label="Splatfest">
+          🎲 <span data-pair-name></span>
+        </button>
+        <button type="button" data-lang>
+          🌐 <T k="switchLang" />
+        </button>
+      </div>
+    </section>
+
+    <div class="duo">
+      <section class="panel">
+        <Sticker tilt={-3}>
+          <T k="lobby" />
+        </Sticker>
+        <Lobby />
+      </section>
+      <section class="panel">
+        <Sticker tilt={2} alt>
+          <T k="about" />
+        </Sticker>
+        <p class="about">
+          <T k="aboutText" />
+        </p>
+        <p class="hint">
+          <T k="hint" />
+        </p>
+      </section>
     </div>
 
-    <div class="w-full flex flex-col gap-3">
-      <button onclick="window.aboutModal.showModal()" class="w-full py-3 px-5 border border-white/20 bg-white/5 hover:bg-white/10 text-white font-roboto font-medium rounded-md transition cursor-pointer flex items-center justify-between shadow-lg">
-        <span class="lang-key" data-key="about">{t("about")}</span>
-        <span class="text-white/40">→</span>
-      </button>
+    <section class="panel">
+      <Sticker tilt={-1.5}>
+        <T k="loadout" />
+      </Sticker>
+      <Loadout />
+    </section>
 
-      <button onclick="window.socialsModal.showModal()" class="w-full py-3 px-5 border border-white/20 bg-white/5 hover:bg-white/10 text-white font-roboto font-medium rounded-md transition cursor-pointer flex items-center justify-between shadow-lg">
-        <span class="lang-key" data-key="socials">{t("socials")}</span>
-        <span class="text-white/40">→</span>
-      </button>
+    <section class="panel">
+      <Sticker tilt={2.5} alt>
+        <T k="gear" />
+      </Sticker>
+      <Gear />
+    </section>
 
-      <button onclick="window.techModal.showModal()" class="w-full py-3 px-5 border border-white/20 bg-white/5 hover:bg-white/10 text-white font-roboto font-medium rounded-md transition cursor-pointer flex items-center justify-between shadow-lg">
-        <span class="lang-key" data-key="technologies">{t("technologies")}</span>
-        <span class="text-white/40">→</span>
-      </button>
+    <section class="panel">
+      <Sticker tilt={-2}>
+        <T k="socials" />
+      </Sticker>
+      <Socials />
+    </section>
 
-    <div class="w-full mt-2">
-      <Footer />
-    </div>
-
-    <About />
-    <Socials />
-    <Technologies />
-
+    <footer>
+      © {year} Justin Lyschik · <T k="footer" />
+    </footer>
   </main>
+
+  <TurfMeter />
+  <Klecks />
 </Layout>
 
-<style>
-  dialog::backdrop {
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(5px);
-  }
-</style>
-
 <script>
-  import deDict from "../i18n/de.json";
-  import enDict from "../i18n/en.json";
+  import { state, swapTeam, reroll, splat } from '../scripts/theme'
+  import { toggleLang } from '../scripts/lang'
 
-  const dicts: Record<string, Record<string, string>> = { de: deDict, en: enDict };
+  const pairName = document.querySelector<HTMLElement>('[data-pair-name]')!
+  const showPair = () => (pairName.textContent = state().name)
+  showPair()
+  window.addEventListener('theme:change', showPair)
 
-  function updatePageLanguage(lang: string) {
-    localStorage.setItem("preferred-lang", lang);
-    const dict = dicts[lang] || dicts["en"];
+  document.querySelector('[data-team-btn]')!.addEventListener('click', (e) => {
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    swapTeam(r.left + r.width / 2, r.top + r.height / 2)
+  })
+  document.querySelector('[data-reroll]')!.addEventListener('click', reroll)
+  document.querySelector('[data-lang]')!.addEventListener('click', toggleLang)
 
-    document.querySelectorAll(".lang-key").forEach((el) => {
-      const key = el.getAttribute("data-key");
-      if (key && dict[key]) {
-        el.textContent = dict[key];
+  const konami = [
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'b',
+    'a',
+  ]
+  let pos = 0
+  window.addEventListener('keydown', (e) => {
+    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key
+    pos = k === konami[pos] ? pos + 1 : k === konami[0] ? 1 : 0
+    if (pos === konami.length) {
+      pos = 0
+      for (let i = 0; i < 70; i++) {
+        setTimeout(() => splat(Math.random() * innerWidth, Math.random() * innerHeight), i * 28)
       }
-    });
+    }
+  })
+</script>
 
-    const btnText = document.getElementById("langButtonText");
-    if (btnText) {
-      btnText.textContent = dict["switchLang"];
+<style>
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 48px 20px 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .hero {
+    position: relative;
+    text-align: center;
+    padding: 30px 0 10px;
+  }
+  .splash {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: min(620px, 110%);
+    transform: translateX(-50%) rotate(-4deg);
+    z-index: -1;
+    opacity: 0.9;
+    fill: var(--theirs);
+  }
+  h1 {
+    margin: 0;
+    font-family: 'Rubik Spray Paint', 'Rubik Variable', sans-serif;
+    font-weight: 400;
+    font-size: clamp(3.6rem, 13vw, 8.5rem);
+    line-height: 0.95;
+    color: var(--mine);
+    text-shadow:
+      4px 4px 0 #000,
+      -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000;
+    transform: rotate(-3deg);
+    transition: color 0.4s;
+  }
+  .name {
+    margin: 14px 0 0;
+    font-weight: 900;
+    font-size: 1.4rem;
+    text-shadow: 0 3px 0 #000;
+  }
+  .tagline {
+    margin: 2px 0 0;
+    font-weight: 700;
+    color: #fffc;
+    text-shadow: 0 2px 0 #000;
+  }
+  .intro {
+    max-width: 520px;
+    margin: 16px auto 0;
+    color: #fffd;
+    line-height: 1.5;
+    background: #000a;
+    padding: 10px 16px;
+    border-radius: 14px;
+  }
+  .controls {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .controls button {
+    font: inherit;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 9px 16px;
+    border-radius: 99px;
+    border: 3px solid #000;
+    background: #1d1a26;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.1s;
+  }
+  .controls button:hover {
+    transform: translateY(-2px);
+  }
+  .controls button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #000;
+  }
+  .controls .team {
+    background: var(--mine);
+    color: #111;
+    transition: background 0.4s;
+  }
+  .dots {
+    display: inline-flex;
+  }
+  .dots i {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #000;
+  }
+  .dots .m {
+    background: var(--mine);
+  }
+  .dots .t {
+    background: var(--theirs);
+    margin-left: -5px;
+  }
+  .duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .about {
+    margin: 0;
+    line-height: 1.6;
+    color: #fffe;
+  }
+  .hint {
+    margin: 14px 0 0;
+    font-size: 0.85rem;
+    color: #fff8;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #fff8;
+  }
+  @media (max-width: 760px) {
+    .duo {
+      grid-template-columns: 1fr;
+    }
+    main {
+      padding-top: 28px;
     }
   }
-
-  const savedLang = localStorage.getItem("preferred-lang") || "en";
-  updatePageLanguage(savedLang);
-
-  document.getElementById("langToggle")?.addEventListener("click", () => {
-    const currentLang = localStorage.getItem("preferred-lang") || "en";
-    const newLang = currentLang === "en" ? "de" : "en";
-    updatePageLanguage(newLang);
-  });
-
-  document.querySelectorAll("dialog").forEach((dialog) => {
-    dialog.addEventListener("click", (e) => {
-      const rect = dialog.getBoundingClientRect();
-      if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
-        dialog.close();
-      }
-    });
-  });
-</script>
+</style>

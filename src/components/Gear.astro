@@ -1,0 +1,137 @@
+---
+import { gear } from '../data/gear'
+import { icon } from '../data/icons'
+import T from './T.astro'
+
+const first = gear[0].id
+---
+
+<div class="gear" data-tab={first}>
+  <div class="tabs" role="tablist">
+    {gear.map((g) => (
+      <button type="button" role="tab" data-tab-btn={g.id} aria-selected={g.id === first ? 'true' : 'false'}>
+        <span data-l="en">{g.title.en}</span>
+        <span data-l="de">{g.title.de}</span>
+      </button>
+    ))}
+    <button type="button" role="tab" data-tab-btn="all" aria-selected="false">
+      <T k="all" />
+    </button>
+  </div>
+  <ul class="pop">
+    {gear.flatMap((g) =>
+      g.items.map((it) => (
+        <li data-group={g.id}>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d={icon(it.icon).path} />
+          </svg>
+          {it.name}
+        </li>
+      )),
+    )}
+  </ul>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.gear')!
+  const list = root.querySelector('ul')!
+  const buttons = root.querySelectorAll<HTMLButtonElement>('[data-tab-btn]')
+  const items = [...list.querySelectorAll<HTMLLIElement>('li')]
+
+  function show(tab: string) {
+    root.dataset.tab = tab
+    for (const b of buttons) b.setAttribute('aria-selected', String(b.dataset.tabBtn === tab))
+    let i = 0
+    for (const li of items) {
+      const on = tab === 'all' || li.dataset.group === tab
+      li.hidden = !on
+      if (on) li.style.setProperty('--i', String(i++))
+    }
+    list.classList.remove('pop')
+    void list.offsetWidth
+    list.classList.add('pop')
+  }
+
+  for (const b of buttons) b.addEventListener('click', () => show(b.dataset.tabBtn!))
+  show(root.dataset.tab!)
+</script>
+
+<style>
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .tabs button {
+    font: inherit;
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 99px;
+    border: 2px solid #fff2;
+    background: #0005;
+    color: #fffc;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+  .tabs button:hover {
+    border-color: #fff6;
+  }
+  .tabs button[aria-selected='true'] {
+    background: var(--mine);
+    border-color: #000;
+    color: #111;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 12px;
+    background: #0006;
+    border: 2px solid #fff1;
+    font-weight: 700;
+    font-size: 0.88rem;
+    transition:
+      transform 0.15s,
+      border-color 0.15s;
+  }
+  li[hidden] {
+    display: none;
+  }
+  .pop li {
+    animation: chip-in 0.26s cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 18ms);
+  }
+  li svg {
+    fill: #fffc;
+    transition: fill 0.15s;
+  }
+  li:hover {
+    transform: translateY(-2px) rotate(-2deg);
+    border-color: var(--mine);
+  }
+  li:hover svg {
+    fill: var(--mine);
+  }
+  @keyframes chip-in {
+    from {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pop li {
+      animation: none;
+    }
+  }
+</style>

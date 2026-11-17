@@ -1,0 +1,35 @@
+<script>
+  window.addEventListener('team:wave', (e) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const { x, y } = (e as CustomEvent).detail as { x: number; y: number }
+    const wave = document.createElement('div')
+    wave.className = 'team-wave'
+    wave.setAttribute('aria-hidden', 'true')
+    wave.style.setProperty('--x', x + 'px')
+    wave.style.setProperty('--y', y + 'px')
+    wave.addEventListener('animationend', () => wave.remove())
+    document.body.append(wave)
+  })
+</script>
+
+<style is:global>
+  .team-wave {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    background: var(--mine);
+    clip-path: circle(0 at var(--x) var(--y));
+    animation: team-flood 0.9s cubic-bezier(0.6, 0, 0.3, 1) forwards;
+  }
+  @keyframes team-flood {
+    55% {
+      clip-path: circle(150vmax at var(--x) var(--y));
+      opacity: 1;
+    }
+    100% {
+      clip-path: circle(150vmax at var(--x) var(--y));
+      opacity: 0;
+    }
+  }
+</style>

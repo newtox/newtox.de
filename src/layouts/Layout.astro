@@ -1,77 +1,102 @@
 ---
-import { SEO } from 'astro-seo'
+import '@fontsource/rubik-spray-paint'
+import '@fontsource-variable/rubik'
+import { pairs } from '../data/theme'
 
-export interface Props {
+interface Props {
   title: string
+  description: string
 }
 
-const { title } = Astro.props as Props
+const { title, description } = Astro.props
 ---
 
 <!doctype html>
-<html lang='en'>
+<html lang="en">
   <head>
-    <SEO description='This is the personal website from Newtox aka Justin.' />
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width' />
-    <link rel='icon' type='image/x-icon' href='/favicon.ico' />
-    <meta name='generator' content={Astro.generator} />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#110f17" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={Astro.site} />
+    <link rel="icon" href="/favicon.ico" />
     <title>{title}</title>
-  </head>
-  <body class='bg-background no-scrollbar'>
-    <slot />
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Silkscreen&display=swap');
-
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-
-      body {
-        background-size: 40px 40px;
-        background-image:
-          linear-gradient(to right, rgba(255, 255, 255, 0.05) 0.5px, transparent 1px),
-          linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 0.5px, transparent 1px);
-      }
-
-      dialog {
-        overscroll-behavior: contain;
-      }
-    </style>
-    <script>
-      function lockScroll() {
-        const scrollY = window.scrollY
-        document.body.dataset.scrollY = String(scrollY)
-        document.body.style.position = 'fixed'
-        document.body.style.top = `-${scrollY}px`
-        document.body.style.left = '0'
-        document.body.style.right = '0'
-      }
-
-      function unlockScroll() {
-        const scrollY = document.body.dataset.scrollY || '0'
-        document.body.style.position = ''
-        document.body.style.top = ''
-        document.body.style.left = ''
-        document.body.style.right = ''
-        window.scrollTo(0, parseInt(scrollY, 10))
-      }
-
-      document.querySelectorAll('dialog').forEach((dialog) => {
-        const observer = new MutationObserver(() => {
-          if (dialog.open) {
-            lockScroll()
-          } else {
-            unlockScroll()
-          }
-        })
-        observer.observe(dialog, { attributes: true, attributeFilter: ['open'] })
-      })
+    <script is:inline define:vars={{ pairs }}>
+      const el = document.documentElement
+      let saved = null
+      try {
+        saved = localStorage.getItem('lang')
+      } catch {}
+      el.lang =
+        saved === 'de' || saved === 'en' ? saved : navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en'
+      const pair = Math.floor(Math.random() * pairs.length)
+      el.dataset.pair = String(pair)
+      el.dataset.team = Math.random() < 0.5 ? '0' : '1'
+      el.style.setProperty('--a', pairs[pair].a)
+      el.style.setProperty('--b', pairs[pair].b)
     </script>
+  </head>
+  <body>
+    <slot />
   </body>
 </html>
+
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    --a: #ff3aa8;
+    --b: #b6f000;
+    --mine: var(--a);
+    --theirs: var(--b);
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html[data-team='1'] {
+    --mine: var(--b);
+    --theirs: var(--a);
+  }
+  html:lang(de) [data-l='en'],
+  html:not(:lang(de)) [data-l='de'] {
+    display: none;
+  }
+  html.painting {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Rubik Variable', system-ui, sans-serif;
+    color: #fff;
+    background-color: #110f17;
+    background-image:
+      radial-gradient(circle at 50% 0%, #2a2140 0%, transparent 60%),
+      repeating-linear-gradient(-45deg, #ffffff06 0 14px, transparent 14px 28px);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: #fff;
+    color: #111;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+  }
+  .panel {
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(22, 19, 30, 0.84);
+    border: 3px solid #000;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+</style>

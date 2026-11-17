@@ -1,5 +1,5 @@
 {
-  description = "Astro Personal Website Flake";
+  description = "newtox.de Astro Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -14,12 +14,12 @@
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            nodejs_22
+            nodejs_24
             pnpm
           ];
 
           shellHook = ''
-            echo "🚀 Astro Development Environment Ready!"
+            echo "🚀 newtox.de dev shell ready"
             echo "Node: $(node -v)"
             echo "pnpm: $(pnpm -v)"
           '';

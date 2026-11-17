@@ -9,83 +9,42 @@ This work is licensed under a
 [cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
 [cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
 
-# newtox.de (Astro Portfolio)
+# newtox.de
 
-Welcome to the **newtox.de** repository! This is a modern, responsive personal portfolio website built with Astro, featuring dynamic language switching (i18n) and a clean component architecture.
+Personal website of Newtox aka Justin. Built with Astro as a fully static site, with a Splatfest-inspired look: click anywhere to ink the page, switch teams, and watch the live Discord lobby card. The interactive parts are small vanilla TypeScript scripts, everything else is plain HTML.
 
-## Overview
+## Features
 
-- **Functionality**: Personal portfolio showcasing technologies, tools, and projects with an integrated internationalization (EN/DE) system
-- **Technology**: Built with Astro, styled with Tailwind CSS, and powered by modern frontend tooling
+- Ink canvas with turf meter, team switching and random Splatfest color pairs
+- Live Discord presence (status, game, Spotify) via [Lanyard](https://github.com/Phineas/lanyard)
+- Projects as loadout cards, tech stack as filterable gear
+- English and German, picked from the browser language
+- Self-hosted fonts (Rubik, Rubik Spray Paint), no requests to Google Fonts
 
-## How to Use
-
-### Prerequisites
-
-- **Node.js**: Ensure Node.js is installed
-- **pnpm**: Fast, disk space efficient package manager (preferred)
-
-### Installation
-
-1. **Clone this repository**:
-   ```bash
-   git clone https://github.com/newtox/newtox.de-Astro.git
-   cd newtox.de-Astro
-   ```
-
-2. **Install Dependencies**:
-   ```bash
-   pnpm install
-   ```
-
-### Development
-
-Start the local development server with hot-reloading:
+## Development
 
 ```bash
+git clone https://github.com/newtox/newtox.de.git
+cd newtox.de
+nix develop
+pnpm install
 pnpm dev
 ```
 
-Access the application at `http://localhost:4321`.
+Without Nix you need Node.js 22.23 or newer and pnpm.
 
-### Build
-
-Build the project for production:
+## Build
 
 ```bash
 pnpm build
 ```
 
-## Core Dependencies
+The static site is written to `dist/`. Serve that folder with Caddy or any static web server.
 
-#### Framework & Build:
-- **Astro**: ^5.x / Latest
-- **Tailwind CSS**: Styling & Design
-- **astro-icon**: Dynamic icon integration
+## Editing content
 
-#### Package Manager:
-- **pnpm**: Dependency management
-
-## Contributing
-
-Want to improve this portfolio? Here's how:
-
-1. **Fork** the repository
-2. **Create** a feature branch: `git checkout -b feature/your-feature`
-3. **Commit** your changes: `git commit -m 'Add: your feature'`
-4. **Push** to your branch: `git push origin feature/your-feature`
-5. Submit a **pull request**
-
-## License
-
-This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)** License.
-
-- **License**: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-
-By contributing, you agree that your contributions will be licensed under the same license.
-
-## Contact
-
-Have questions or found a bug?
-- Open an issue on GitHub
-- Or reach out to me at [justin.lys26@gmail.com](mailto:justin.lys26@gmail.com)
+- Projects: `src/data/projects.ts`
+- Tech stack: `src/data/gear.ts`
+- Social links and Discord ID: `src/data/socials.ts`
+- Texts in both languages: `src/data/i18n.ts`
+- Splatfest color pairs: `src/data/theme.ts`

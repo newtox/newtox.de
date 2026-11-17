@@ -1,0 +1,147 @@
+---
+import T from './T.astro'
+---
+
+<div class="meter" id="turf" data-no-ink hidden>
+  <span class="label">
+    <T k="turf" />
+  </span>
+  <div class="row">
+    <span class="pct mine">
+      <T k="yours" /> <b data-mine>0.0%</b>
+    </span>
+    <div class="bar">
+      <div class="fill mine" data-bar-mine></div>
+      <div class="fill theirs" data-bar-theirs></div>
+    </div>
+    <span class="pct theirs">
+      <b data-theirs>0.0%</b> <T k="them" />
+    </span>
+  </div>
+  <button type="button" data-wipe>
+    <T k="wipe" />
+  </button>
+</div>
+
+<script>
+  const root = document.getElementById('turf')!
+  const mine = root.querySelector<HTMLElement>('[data-mine]')!
+  const theirs = root.querySelector<HTMLElement>('[data-theirs]')!
+  const barMine = root.querySelector<HTMLElement>('[data-bar-mine]')!
+  const barTheirs = root.querySelector<HTMLElement>('[data-bar-theirs]')!
+
+  window.addEventListener('ink:coverage', (e) => {
+    const d = (e as CustomEvent).detail as { mine: number; theirs: number }
+    root.hidden = d.mine + d.theirs === 0
+    mine.textContent = d.mine.toFixed(1) + '%'
+    theirs.textContent = d.theirs.toFixed(1) + '%'
+    barMine.style.width = d.mine + '%'
+    barTheirs.style.width = d.theirs + '%'
+    root.classList.toggle('lead', d.mine >= d.theirs)
+  })
+
+  root.querySelector('[data-wipe]')!.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('ink:wipe'))
+  })
+</script>
+
+<style>
+  .meter {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px 8px 16px;
+    border-radius: 999px;
+    background: rgba(10, 9, 14, 0.85);
+    border: 3px solid #000;
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    animation: pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+    max-width: calc(100vw - 24px);
+  }
+  .meter[hidden] {
+    display: none;
+  }
+  .label {
+    font-weight: 900;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff9;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bar {
+    position: relative;
+    width: min(260px, 40vw);
+    height: 14px;
+    border-radius: 99px;
+    background: #2a2633;
+    overflow: hidden;
+  }
+  .fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    transition: width 0.35s ease;
+  }
+  .fill.mine {
+    left: 0;
+    background: var(--mine);
+  }
+  .fill.theirs {
+    right: 0;
+    background: var(--theirs);
+  }
+  .pct {
+    font-weight: 800;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    color: #fffc;
+    white-space: nowrap;
+  }
+  .pct b {
+    font-weight: 800;
+  }
+  .lead .pct.mine,
+  .meter:not(.lead) .pct.theirs {
+    color: #fff;
+  }
+  button {
+    font: inherit;
+    font-weight: 800;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 99px;
+    border: 2px solid #fff3;
+    background: #fff1;
+    color: #fff;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #fff2;
+  }
+  @media (max-width: 560px) {
+    .label {
+      display: none;
+    }
+    .pct {
+      font-size: 0.7rem;
+    }
+  }
+  @keyframes pop {
+    from {
+      transform: translateX(-50%) scale(0.6);
+      opacity: 0;
+    }
+  }
+</style>

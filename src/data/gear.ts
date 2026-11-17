@@ -1,0 +1,85 @@
+export type GearGroup = { id: string; title: { en: string; de: string }; items: { name: string; icon: string }[] }
+
+export const gear: GearGroup[] = [
+  {
+    id: 'lang',
+    title: { en: 'Languages', de: 'Sprachen' },
+    items: [
+      { name: 'Rust', icon: 'rust' },
+      { name: 'Dart', icon: 'dart' },
+      { name: 'Go', icon: 'go' },
+      { name: 'TypeScript', icon: 'typescript' },
+      { name: 'JavaScript', icon: 'javascript' },
+      { name: 'PHP', icon: 'php' },
+      { name: 'Python', icon: 'python' },
+      { name: 'Lua', icon: 'lua' },
+    ],
+  },
+  {
+    id: 'web',
+    title: { en: 'Web', de: 'Web' },
+    items: [
+      { name: 'HTML5', icon: 'html5' },
+      { name: 'CSS', icon: 'css' },
+      { name: 'Sass', icon: 'sass' },
+      { name: 'Markdown', icon: 'markdown' },
+      { name: 'JSON', icon: 'json' },
+      { name: 'YAML', icon: 'yaml' },
+    ],
+  },
+  {
+    id: 'fw',
+    title: { en: 'Frameworks', de: 'Frameworks' },
+    items: [
+      { name: 'Svelte', icon: 'svelte' },
+      { name: 'Tauri', icon: 'tauri' },
+      { name: 'Laravel', icon: 'laravel' },
+      { name: 'Flutter', icon: 'flutter' },
+      { name: 'React', icon: 'react' },
+      { name: 'Next.js', icon: 'nextdotjs' },
+      { name: 'Astro', icon: 'astro' },
+      { name: 'Node.js', icon: 'nodedotjs' },
+      { name: 'Tailwind CSS', icon: 'tailwindcss' },
+      { name: 'Bootstrap', icon: 'bootstrap' },
+      { name: 'PyTorch', icon: 'pytorch' },
+    ],
+  },
+  {
+    id: 'ops',
+    title: { en: 'Servers', de: 'Server' },
+    items: [
+      { name: 'Docker', icon: 'docker' },
+      { name: 'Caddy', icon: 'caddy' },
+      { name: 'LiveKit', icon: 'livekit' },
+      { name: 'Debian', icon: 'debian' },
+      { name: 'Ubuntu', icon: 'ubuntu' },
+      { name: 'Termius', icon: 'termius' },
+      { name: 'Mullvad', icon: 'mullvad' },
+    ],
+  },
+  {
+    id: 'pkg',
+    title: { en: 'Package managers', de: 'Paketmanager' },
+    items: [
+      { name: 'pnpm', icon: 'pnpm' },
+      { name: 'npm', icon: 'npm' },
+      { name: 'Yarn', icon: 'yarn' },
+      { name: 'Composer', icon: 'composer' },
+      { name: 'Nix', icon: 'nixos' },
+      { name: 'Flatpak', icon: 'flatpak' },
+      { name: 'DNF', icon: 'fedora' },
+      { name: 'NuGet', icon: 'nuget' },
+      { name: 'Chocolatey', icon: 'chocolatey' },
+    ],
+  },
+  {
+    id: 'os',
+    title: { en: 'Systems', de: 'Systeme' },
+    items: [
+      { name: 'Nobara Linux', icon: 'fedora' },
+      { name: 'SteamOS', icon: 'steamdeck' },
+      { name: 'KDE', icon: 'kde' },
+      { name: 'Windows', icon: 'windows' },
+    ],
+  },
+]

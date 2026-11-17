@@ -1,0 +1,12 @@
+---
+import { dict, type Key } from '../data/i18n'
+
+interface Props {
+  k: Key
+}
+
+const { k } = Astro.props
+---
+
+<span data-l="en">{dict.en[k]}</span>
+<span data-l="de">{dict.de[k]}</span>

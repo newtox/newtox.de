@@ -1,0 +1,315 @@
+---
+import T from './T.astro'
+---
+
+<div class="lobby" id="lobby" data-status="offline">
+  <div class="me">
+    <div class="avatar">
+      <img src="https://avatars.githubusercontent.com/u/39810250?s=160" alt="" width="72" height="72" data-avatar />
+      <span class="dot"></span>
+    </div>
+    <div class="who">
+      <strong data-name>Newtox</strong>
+      <span class="status" data-status-text>
+        <T k="connecting" />
+      </span>
+      <span class="bubble" data-custom hidden></span>
+    </div>
+  </div>
+
+  <div class="slot" data-spotify hidden>
+    <img class="art" alt="" width="64" height="64" data-art />
+    <div class="info">
+      <span class="kicker">
+        <T k="listening" />
+      </span>
+      <a class="title" target="_blank" rel="noopener" data-song></a>
+      <span class="sub" data-artist></span>
+      <div class="progress">
+        <div data-progress></div>
+      </div>
+      <div class="times">
+        <span data-pos></span>
+        <span data-len></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slot" data-game hidden>
+    <img class="art" alt="" width="64" height="64" data-game-art />
+    <div class="art placeholder" data-game-placeholder>
+      🎮
+    </div>
+    <div class="info">
+      <span class="kicker">
+        <T k="playing" />
+      </span>
+      <span class="title" data-game-name></span>
+      <span class="sub" data-game-details></span>
+      <span class="sub" data-game-state></span>
+      <span class="sub mono" data-game-time-wrap>
+        <span data-game-time></span> <T k="elapsed" />
+      </span>
+    </div>
+  </div>
+
+  <p class="idle" data-idle hidden>
+    <T k="nothingRunning" />
+  </p>
+</div>
+
+<script>
+  import { subscribe, activityImage, clock, type Presence } from '../scripts/lanyard'
+  import { bi } from '../scripts/lang'
+
+  const root = document.getElementById('lobby')!
+  const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!
+  let current: Presence | null = null
+
+  function setText(sel: string, text: string | undefined) {
+    const el = $(sel)
+    el.textContent = text ?? ''
+    el.hidden = !text
+  }
+
+  function render(p: Presence) {
+    current = p
+    const status = p.discord_status ?? 'offline'
+    root.dataset.status = status
+    $('[data-status-text]').replaceChildren(bi(status))
+    $('[data-name]').textContent = p.discord_user.global_name ?? p.discord_user.username
+    if (p.discord_user.avatar) {
+      const ext = p.discord_user.avatar.startsWith('a_') ? 'gif' : 'png'
+      $<HTMLImageElement>('[data-avatar]').src =
+        `https://cdn.discordapp.com/avatars/${p.discord_user.id}/${p.discord_user.avatar}.${ext}?size=160`
+    }
+
+    const custom = p.activities.find((a) => a.type === 4)
+    const emoji = custom?.emoji && !custom.emoji.id ? custom.emoji.name + ' ' : ''
+    setText('[data-custom]', custom?.state ? emoji + custom.state : undefined)
+
+    const sp = p.listening_to_spotify ? p.spotify : null
+    $('[data-spotify]').hidden = !sp
+    if (sp) {
+      $<HTMLImageElement>('[data-art]').src = sp.album_art_url
+      const song = $<HTMLAnchorElement>('[data-song]')
+      song.textContent = sp.song
+      song.href = `https://open.spotify.com/track/${sp.track_id}`
+      $('[data-artist]').textContent = sp.artist
+    }
+
+    const game = p.activities.find((a) => a.type === 0)
+    $('[data-game]').hidden = !game
+    if (game) {
+      const img = activityImage(game)
+      const art = $<HTMLImageElement>('[data-game-art]')
+      art.hidden = !img
+      if (img) art.src = img
+      $('[data-game-placeholder]').hidden = !!img
+      $('[data-game-name]').textContent = game.name
+      setText('[data-game-details]', game.details)
+      setText('[data-game-state]', game.state)
+      $('[data-game-time-wrap]').hidden = !game.timestamps?.start
+    }
+
+    $('[data-idle]').hidden = !!sp || !!game
+    tick()
+  }
+
+  function tick() {
+    if (!current) return
+    const now = Date.now()
+    const sp = current.listening_to_spotify ? current.spotify : null
+    if (sp) {
+      const len = sp.timestamps.end - sp.timestamps.start
+      const pos = now - sp.timestamps.start
+      $('[data-progress]').style.width = Math.min(100, (pos / len) * 100) + '%'
+      $('[data-pos]').textContent = clock(pos)
+      $('[data-len]').textContent = clock(len)
+    }
+    const start = current.activities.find((a) => a.type === 0)?.timestamps?.start
+    if (start) $('[data-game-time]').textContent = clock(now - start)
+  }
+
+  subscribe(render)
+  setInterval(tick, 1000)
+  setTimeout(() => {
+    if (!current) {
+      $('[data-status-text]').replaceChildren(bi('offline'))
+      $('[data-idle]').hidden = false
+    }
+  }, 6000)
+</script>
+
+<style>
+  .lobby {
+    --ring: #7a7686;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .lobby[data-status='online'] {
+    --ring: #3ee07a;
+  }
+  .lobby[data-status='idle'] {
+    --ring: #ffb21f;
+  }
+  .lobby[data-status='dnd'] {
+    --ring: #ff4d4d;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  .me {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .avatar {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex: none;
+  }
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid var(--ring);
+    object-fit: cover;
+    background: #222;
+  }
+  .dot {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ring);
+    border: 3px solid #14121b;
+  }
+  .lobby[data-status='online'] .dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid var(--ring);
+    animation: ping 1.8s ease-out infinite;
+  }
+  .who {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .who strong {
+    font-size: 1.25rem;
+    font-weight: 900;
+  }
+  .status {
+    color: var(--ring);
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .bubble {
+    margin-top: 4px;
+    align-self: flex-start;
+    font-size: 0.85rem;
+    background: #fff;
+    color: #111;
+    padding: 3px 10px;
+    border-radius: 12px 12px 12px 3px;
+    font-weight: 600;
+  }
+  .slot {
+    display: flex;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 16px;
+    background: #0006;
+    border: 2px solid #fff1;
+  }
+  .art {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex: none;
+  }
+  .placeholder {
+    display: grid;
+    place-items: center;
+    font-size: 1.8rem;
+    background: var(--theirs);
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+  .kicker {
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff8;
+  }
+  .title {
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  a.title:hover {
+    text-decoration: underline;
+  }
+  .sub {
+    font-size: 0.85rem;
+    color: #fffb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mono,
+  .times {
+    font-variant-numeric: tabular-nums;
+  }
+  .progress {
+    margin-top: 6px;
+    height: 6px;
+    border-radius: 99px;
+    background: #fff2;
+    overflow: hidden;
+  }
+  .progress div {
+    height: 100%;
+    width: 0;
+    border-radius: 99px;
+    background: var(--mine);
+    transition: width 1s linear;
+  }
+  .times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #fff8;
+    margin-top: 2px;
+  }
+  .idle {
+    margin: 0;
+    color: #fff9;
+    font-size: 0.9rem;
+  }
+  @keyframes ping {
+    to {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,32 +1,27 @@
 {
   "name": "newtox.de",
-  "version": "0.0.1",
-  "private": false,
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.1.5",
-    "astro": "^5.4.0",
-    "astro-icon": "^1.1.5",
-    "astro-seo": "^0.8.4",
-    "tailwindcss": "^3.4.17"
+    "@fontsource-variable/rubik": "^5.3.0",
+    "@fontsource/rubik-spray-paint": "^5.3.0",
+    "astro": "^7.4.12"
   },
   "devDependencies": {
-    "@iconify-json/akar-icons": "^1.2.7",
-    "@iconify-json/bi": "^1.2.7",
-    "@iconify-json/cib": "^1.2.3",
-    "@iconify-json/file-icons": "^1.2.2",
-    "@iconify-json/fontisto": "^1.2.1",
-    "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/simple-icons": "^1.2.93",
-    "@types/react": "^18.3.18",
+    "@astrojs/check": "^0.9.12",
     "prettier": "^3.5.3",
-    "prettier-plugin-astro": "^0.14.1",
-    "svgo": "^3.3.2"
+    "prettier-plugin-astro": "^1.1.2",
+    "simple-icons": "^16.38.0",
+    "typescript": "^6.0.3"
   }
 }

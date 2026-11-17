@@ -1,0 +1,115 @@
+<button class="klecks" id="klecks" type="button" aria-label="Klecks" title="Klecks">
+  <svg viewBox="0 0 100 100" width="100%" height="100%">
+    <path
+      class="body"
+      d="M50 8c10 0 14 9 22 13 9 5 21 6 21 22 0 12-6 16-6 26 0 13-12 23-37 23S13 82 13 69c0-10-6-14-6-26C7 27 19 26 28 21c8-4 12-13 22-13Z"
+      stroke="#000"
+      stroke-width="4"
+    ></path>
+    <ellipse cx="34" cy="30" rx="9" ry="5" fill="#fff" opacity="0.35" transform="rotate(-25 34 30)"></ellipse>
+    <g transform="translate(38 52)">
+      <g class="eye">
+        <ellipse rx="9" ry="11" fill="#fff" stroke="#000" stroke-width="3"></ellipse>
+        <circle class="pupil" r="4.6" fill="#000"></circle>
+      </g>
+    </g>
+    <g transform="translate(62 52)">
+      <g class="eye">
+        <ellipse rx="9" ry="11" fill="#fff" stroke="#000" stroke-width="3"></ellipse>
+        <circle class="pupil" r="4.6" fill="#000"></circle>
+      </g>
+    </g>
+    <path d="M44 74q6 5 12 0" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round"></path>
+  </svg>
+</button>
+
+<script>
+  import { splat } from '../scripts/theme'
+
+  const el = document.getElementById('klecks')!
+  const pupils = el.querySelectorAll<SVGCircleElement>('.pupil')
+
+  window.addEventListener('pointermove', (e) => {
+    const r = el.getBoundingClientRect()
+    const dx = e.clientX - (r.left + r.width / 2)
+    const dy = e.clientY - (r.top + r.height / 2)
+    const d = Math.hypot(dx, dy) || 1
+    const k = Math.min(1, d / 300)
+    for (const p of pupils) {
+      p.setAttribute('cx', String((dx / d) * 4 * k))
+      p.setAttribute('cy', String((dy / d) * 4 * k))
+    }
+  })
+
+  el.addEventListener('click', () => {
+    el.classList.remove('squish')
+    void el.offsetWidth
+    el.classList.add('squish')
+    const r = el.getBoundingClientRect()
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => splat(r.left - 40 - Math.random() * 180, r.top - 20 - Math.random() * 200), i * 120)
+    }
+  })
+  el.addEventListener('animationend', () => el.classList.remove('squish'))
+
+  setInterval(() => {
+    el.classList.add('blink')
+    setTimeout(() => el.classList.remove('blink'), 140)
+  }, 3800)
+</script>
+
+<style>
+  .klecks {
+    position: fixed;
+    right: 18px;
+    bottom: 14px;
+    width: 76px;
+    height: 76px;
+    z-index: 40;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    filter: drop-shadow(0 5px 0 rgba(0, 0, 0, 0.45));
+    animation: bob 3s ease-in-out infinite;
+  }
+  .body {
+    fill: var(--mine);
+    transition: fill 0.4s;
+  }
+  .eye {
+    transition: transform 0.08s;
+  }
+  .blink .eye {
+    transform: scaleY(0.1);
+  }
+  .klecks.squish {
+    animation: squish 0.45s cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+  @keyframes bob {
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+  @keyframes squish {
+    30% {
+      transform: scale(1.25, 0.75);
+    }
+    60% {
+      transform: scale(0.85, 1.15);
+    }
+  }
+  @media (max-width: 560px) {
+    .klecks {
+      width: 56px;
+      height: 56px;
+      bottom: 72px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .klecks,
+    .klecks.squish {
+      animation: none;
+    }
+  }
+</style>
