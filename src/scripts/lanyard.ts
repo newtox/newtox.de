@@ -8,7 +8,7 @@ export type Activity = {
   state?: string
   application_id?: string
   timestamps?: { start?: number; end?: number }
-  assets?: { large_image?: string }
+  assets?: { large_image?: string; large_text?: string; small_image?: string; small_text?: string }
   emoji?: { name: string; id?: string }
 }
 
@@ -63,8 +63,8 @@ export function subscribe(onData: (p: Presence) => void, onMissing: () => void) 
   connect()
 }
 
-export function activityImage(a: Activity) {
-  const img = a.assets?.large_image
+export function activityImage(a: Activity, small = false) {
+  const img = small ? a.assets?.small_image : a.assets?.large_image
   if (!img) return null
   if (img.startsWith('mp:')) return `https://media.discordapp.net/${img.slice(3)}`
   if (img.startsWith('spotify:')) return `https://i.scdn.co/image/${img.slice(8)}`

@@ -39,8 +39,11 @@ import T from './T.astro'
     <div class="acts" data-acts></div>
     <template data-act-tpl>
       <div class="slot">
-        <img class="art" alt="" width="64" height="64" data-a-art />
-        <div class="art placeholder" data-a-placeholder></div>
+        <div class="art-wrap">
+          <img class="art" alt="" width="64" height="64" data-a-art />
+          <div class="art placeholder" data-a-placeholder></div>
+          <img class="small" alt="" width="24" height="24" data-a-small />
+        </div>
         <div class="info">
           <span class="kicker" data-a-kicker></span>
           <span class="title" data-a-name></span>
@@ -74,6 +77,7 @@ import T from './T.astro'
 <script>
   import { subscribe, activityImage, clock, type Activity, type Presence } from '../scripts/lanyard'
   import { bi } from '../scripts/lang'
+  import { dict } from '../data/i18n'
 
   const root = document.getElementById('lobby')!
   const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!
@@ -101,6 +105,17 @@ import T from './T.astro'
     t.hidden = !text
   }
 
+  function kicker(key: 'playing' | 'listeningTo' | 'watching' | 'competing', name: string) {
+    const wrap = document.createElement('span')
+    for (const l of ['en', 'de'] as const) {
+      const s = document.createElement('span')
+      s.dataset.l = l
+      s.textContent = dict[l][key].replace('{name}', name)
+      wrap.append(s)
+    }
+    return wrap
+  }
+
   function card(a: Activity) {
     const tpl = $<HTMLTemplateElement>('[data-act-tpl]')
     const el = (tpl.content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement
@@ -118,9 +133,19 @@ import T from './T.astro'
       }
       art.src = img
     }
-    part(el, '[data-a-kicker]').replaceChildren(bi(kind.key))
-    part(el, '[data-a-name]').textContent = a.name
-    fill(el, '[data-a-details]', a.details)
+    const small = part<HTMLImageElement>(el, '[data-a-small]')
+    const smallSrc = activityImage(a, true)
+    small.hidden = !smallSrc
+    if (smallSrc) {
+      small.onerror = () => (small.hidden = true)
+      small.src = smallSrc
+      if (a.assets?.small_text) small.title = a.assets.small_text
+    }
+    if (a.assets?.large_text) art.title = a.assets.large_text
+    part(el, '[data-a-kicker]').replaceChildren(kicker(kind.key, a.name))
+    const game = a.type === 0 || !a.details
+    part(el, '[data-a-name]').textContent = game ? a.name : a.details!
+    fill(el, '[data-a-details]', game ? a.details : undefined)
     fill(el, '[data-a-state]', a.state)
     return el
   }
@@ -322,6 +347,23 @@ import T from './T.astro'
     border-radius: 12px;
     object-fit: cover;
     flex: none;
+  }
+  .art-wrap {
+    position: relative;
+    flex: none;
+    width: 64px;
+    height: 64px;
+  }
+  .small {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #14121b;
+    background: #14121b;
   }
   .placeholder {
     display: grid;
