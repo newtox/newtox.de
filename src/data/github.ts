@@ -22,7 +22,7 @@ const query = `query ($login: String!) {
           description
           stargazerCount
           primaryLanguage { name }
-          repositoryTopics(first: 6) { nodes { topic { name } } }
+          repositoryTopics(first: 20) { nodes { topic { name } } }
           languages(first: 3, orderBy: { field: SIZE, direction: DESC }) { nodes { name color } }
         }
       }
