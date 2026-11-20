@@ -1,5 +1,6 @@
 ---
 import T from './T.astro'
+import { siSpotify } from 'simple-icons'
 ---
 
 <div class="lobby" id="lobby" data-status="offline">
@@ -23,6 +24,7 @@ import T from './T.astro'
       <div class="info">
         <span class="kicker">
           <T k="listening" />
+          <svg class="platform" viewBox="0 0 24 24" aria-hidden="true"><path d={siSpotify.path}></path></svg>
         </span>
         <a class="title" target="_blank" rel="noopener" data-song></a>
         <span class="sub" data-artist></span>
@@ -45,11 +47,15 @@ import T from './T.astro'
           <img class="small" alt="" width="24" height="24" data-a-small />
         </div>
         <div class="info">
-          <span class="kicker" data-a-kicker></span>
+          <span class="kicker">
+            <span data-a-kicker></span>
+            <svg class="platform" viewBox="0 0 24 24" aria-hidden="true" data-a-platform><path></path></svg>
+          </span>
           <span class="title" data-a-name></span>
           <span class="sub" data-a-details></span>
           <span class="sub" data-a-state></span>
-          <span class="sub mono" data-a-elapsed>
+          <span class="clock" data-a-elapsed>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 15h10a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2Z"></path></svg>
             <span data-a-time></span>
           </span>
           <div data-a-bar>
@@ -78,6 +84,31 @@ import T from './T.astro'
   import { subscribe, activityImage, clock, type Activity, type Presence } from '../scripts/lanyard'
   import { bi } from '../scripts/lang'
   import { dict } from '../data/i18n'
+  import {
+    siApplemusic,
+    siCrunchyroll,
+    siDeezer,
+    siKick,
+    siNetflix,
+    siSoundcloud,
+    siTidal,
+    siTwitch,
+    siYoutube,
+    siYoutubemusic,
+  } from 'simple-icons'
+
+  const platforms: [RegExp, string][] = [
+    [/youtube music/i, siYoutubemusic.path],
+    [/youtube/i, siYoutube.path],
+    [/twitch/i, siTwitch.path],
+    [/\bkick\b/i, siKick.path],
+    [/soundcloud/i, siSoundcloud.path],
+    [/netflix/i, siNetflix.path],
+    [/crunchyroll/i, siCrunchyroll.path],
+    [/apple music/i, siApplemusic.path],
+    [/deezer/i, siDeezer.path],
+    [/tidal/i, siTidal.path],
+  ]
 
   const root = document.getElementById('lobby')!
   const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!
@@ -143,6 +174,10 @@ import T from './T.astro'
     }
     if (a.assets?.large_text) art.title = a.assets.large_text
     part(el, '[data-a-kicker]').replaceChildren(kicker(kind.key, a.name))
+    const logo = a.type === 0 ? undefined : platforms.find(([re]) => re.test(a.name))?.[1]
+    const platform = el.querySelector<SVGSVGElement>('[data-a-platform]')!
+    platform.style.display = logo ? '' : 'none'
+    if (logo) platform.querySelector('path')!.setAttribute('d', logo)
     const game = a.type === 0 || !a.details
     part(el, '[data-a-name]').textContent = game ? a.name : a.details!
     fill(el, '[data-a-details]', game ? a.details : undefined)
@@ -351,8 +386,15 @@ import T from './T.astro'
   .art-wrap {
     position: relative;
     flex: none;
-    width: 64px;
+    min-width: 64px;
     height: 64px;
+    align-self: flex-start;
+  }
+  .art-wrap .art {
+    width: auto;
+    min-width: 64px;
+    max-width: 114px;
+    border-radius: 8px;
   }
   .small {
     position: absolute;
@@ -378,11 +420,35 @@ import T from './T.astro'
     flex: 1;
   }
   .kicker {
-    font-size: 0.68rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #fff8;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #dbdee1;
+    margin-bottom: 2px;
+  }
+  .platform {
+    width: 13px;
+    height: 13px;
+    flex: none;
+    fill: #949ba4;
+  }
+  .clock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    color: #3ba55d;
+    font-variant-numeric: tabular-nums;
+  }
+  .clock svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
   }
   .title {
     font-weight: 800;
