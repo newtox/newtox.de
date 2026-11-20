@@ -122,14 +122,22 @@ import { siSpotify } from 'simple-icons'
     5: { key: 'competing' },
   }
 
-  let gameIcons: Promise<Record<string, string>> | null = null
+  const appIcons = new Map<string, Promise<string | null>>()
 
   function gameIcon(id: string) {
-    gameIcons ??= fetch('/game-icons.json')
-      .then((r) => (r.ok ? r.json() : {}))
-      .catch(() => ({}))
-    return gameIcons.then((m) => (m[id] ? `https://cdn.discordapp.com/app-icons/${id}/${m[id]}.png?size=160` : null))
+    let icon = appIcons.get(id)
+    if (!icon) {
+      icon = fetch(`https://discord.com/api/v10/applications/${id}/rpc`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((app: { icon?: string | null } | null) =>
+          app?.icon ? `https://cdn.discordapp.com/app-icons/${id}/${app.icon}.png?size=160` : null,
+        )
+        .catch(() => null)
+      appIcons.set(id, icon)
+    }
+    return icon
   }
+
 
   function isSpotify(a: Activity) {
     return a.id?.startsWith('spotify:') || (a.type === 2 && a.name === 'Spotify')
