@@ -4,7 +4,8 @@
   import { mountInk } from '../scripts/ink'
 
   const canvas = document.getElementById('ink')
-  if (canvas instanceof HTMLCanvasElement) mountInk(canvas)
+  const touch = matchMedia('(hover: none) and (pointer: coarse)').matches
+  if (canvas instanceof HTMLCanvasElement && !touch) mountInk(canvas)
 </script>
 
 <style>
@@ -15,5 +16,10 @@
     height: 100vh;
     z-index: 0;
     pointer-events: none;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    canvas {
+      display: none !important;
+    }
   }
 </style>
