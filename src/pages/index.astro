@@ -263,4 +263,27 @@ const repos = await pinnedRepos('newtox')
       padding-top: 28px;
     }
   }
+  @media (max-width: 560px) {
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 360px;
+      margin-inline: auto;
+    }
+    .controls button {
+      justify-content: center;
+      white-space: nowrap;
+      min-width: 0;
+      padding: 9px 10px;
+      gap: 6px;
+    }
+    .controls .team {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 359px) {
+    .controls button {
+      font-size: 0.78rem;
+    }
+  }
 </style>
