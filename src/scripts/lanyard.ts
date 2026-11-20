@@ -1,6 +1,7 @@
 import { DISCORD_ID } from '../data/socials'
 
 export type Activity = {
+  id?: string
   type: number
   name: string
   details?: string

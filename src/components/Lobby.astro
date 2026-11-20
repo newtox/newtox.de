@@ -36,23 +36,31 @@ import T from './T.astro'
       </div>
     </div>
 
-    <div class="slot" data-game hidden>
-      <img class="art" alt="" width="64" height="64" data-game-art />
-      <div class="art placeholder" data-game-placeholder>
-        🎮
+    <div class="acts" data-acts></div>
+    <template data-act-tpl>
+      <div class="slot">
+        <img class="art" alt="" width="64" height="64" data-a-art />
+        <div class="art placeholder" data-a-placeholder></div>
+        <div class="info">
+          <span class="kicker" data-a-kicker></span>
+          <span class="title" data-a-name></span>
+          <span class="sub" data-a-details></span>
+          <span class="sub" data-a-state></span>
+          <span class="sub mono" data-a-elapsed>
+            <span data-a-time></span> <T k="elapsed" />
+          </span>
+          <div data-a-bar>
+            <div class="progress">
+              <div data-a-progress></div>
+            </div>
+            <div class="times">
+              <span data-a-pos></span>
+              <span data-a-len></span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="info">
-        <span class="kicker">
-          <T k="playing" />
-        </span>
-        <span class="title" data-game-name></span>
-        <span class="sub" data-game-details></span>
-        <span class="sub" data-game-state></span>
-        <span class="sub mono" data-game-time-wrap>
-          <span data-game-time></span> <T k="elapsed" />
-        </span>
-      </div>
-    </div>
+    </template>
 
     <p class="idle" data-idle hidden>
       <T k="nothingRunning" />
@@ -64,12 +72,58 @@ import T from './T.astro'
 </div>
 
 <script>
-  import { subscribe, activityImage, clock, type Presence } from '../scripts/lanyard'
+  import { subscribe, activityImage, clock, type Activity, type Presence } from '../scripts/lanyard'
   import { bi } from '../scripts/lang'
 
   const root = document.getElementById('lobby')!
   const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!
   let current: Presence | null = null
+  let shown: { a: Activity; el: HTMLElement }[] = []
+
+  const kinds: Record<number, { key: 'playing' | 'listeningTo' | 'watching' | 'competing'; icon: string }> = {
+    0: { key: 'playing', icon: '🎮' },
+    2: { key: 'listeningTo', icon: '🎧' },
+    3: { key: 'watching', icon: '📺' },
+    5: { key: 'competing', icon: '🏆' },
+  }
+
+  function isSpotify(a: Activity) {
+    return a.id?.startsWith('spotify:') || (a.type === 2 && a.name === 'Spotify')
+  }
+
+  function part<T extends HTMLElement>(el: HTMLElement, sel: string) {
+    return el.querySelector<T>(sel)!
+  }
+
+  function fill(el: HTMLElement, sel: string, text: string | undefined) {
+    const t = part(el, sel)
+    t.textContent = text ?? ''
+    t.hidden = !text
+  }
+
+  function card(a: Activity) {
+    const tpl = $<HTMLTemplateElement>('[data-act-tpl]')
+    const el = (tpl.content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement
+    const kind = kinds[a.type]
+    const img = activityImage(a)
+    const art = part<HTMLImageElement>(el, '[data-a-art]')
+    art.hidden = !img
+    const ph = part(el, '[data-a-placeholder]')
+    ph.hidden = !!img
+    ph.textContent = kind.icon
+    if (img) {
+      art.onerror = () => {
+        art.hidden = true
+        ph.hidden = false
+      }
+      art.src = img
+    }
+    part(el, '[data-a-kicker]').replaceChildren(bi(kind.key))
+    part(el, '[data-a-name]').textContent = a.name
+    fill(el, '[data-a-details]', a.details)
+    fill(el, '[data-a-state]', a.state)
+    return el
+  }
 
   function setText(sel: string, text: string | undefined) {
     const el = $(sel)
@@ -103,21 +157,11 @@ import T from './T.astro'
       $('[data-artist]').textContent = sp.artist
     }
 
-    const game = p.activities.find((a) => a.type === 0)
-    $('[data-game]').hidden = !game
-    if (game) {
-      const img = activityImage(game)
-      const art = $<HTMLImageElement>('[data-game-art]')
-      art.hidden = !img
-      if (img) art.src = img
-      $('[data-game-placeholder]').hidden = !!img
-      $('[data-game-name]').textContent = game.name
-      setText('[data-game-details]', game.details)
-      setText('[data-game-state]', game.state)
-      $('[data-game-time-wrap]').hidden = !game.timestamps?.start
-    }
+    const acts = p.activities.filter((a) => a.type in kinds && !isSpotify(a))
+    shown = acts.map((a) => ({ a, el: card(a) }))
+    $('[data-acts]').replaceChildren(...shown.map((x) => x.el))
 
-    $('[data-idle]').hidden = !!sp || !!game
+    $('[data-idle]').hidden = !!sp || acts.length > 0
     tick()
   }
 
@@ -132,8 +176,22 @@ import T from './T.astro'
       $('[data-pos]').textContent = clock(pos)
       $('[data-len]').textContent = clock(len)
     }
-    const start = current.activities.find((a) => a.type === 0)?.timestamps?.start
-    if (start) $('[data-game-time]').textContent = clock(now - start)
+    for (const { a, el } of shown) {
+      const start = a.timestamps?.start
+      const end = a.timestamps?.end
+      const bar = !!start && !!end && end > start
+      part(el, '[data-a-bar]').hidden = !bar
+      part(el, '[data-a-elapsed]').hidden = bar || !start
+      if (bar) {
+        const len = end - start
+        const pos = Math.min(len, now - start)
+        part(el, '[data-a-progress]').style.width = (pos / len) * 100 + '%'
+        part(el, '[data-a-pos]').textContent = clock(pos)
+        part(el, '[data-a-len]').textContent = clock(len)
+      } else if (start) {
+        part(el, '[data-a-time]').textContent = clock(now - start)
+      }
+    }
   }
 
   subscribe(render, () => {
@@ -241,6 +299,14 @@ import T from './T.astro'
     padding: 3px 10px;
     border-radius: 12px 12px 12px 3px;
     font-weight: 600;
+  }
+  .acts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .acts:empty {
+    display: none;
   }
   .slot {
     display: flex;
