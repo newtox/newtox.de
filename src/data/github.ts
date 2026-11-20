@@ -64,7 +64,7 @@ export async function pinnedRepos(login: string): Promise<Repo[]> {
       homepage: n.homepageUrl || null,
       description: n.description,
       stars: n.stargazerCount,
-      topics: n.repositoryTopics.nodes.map((t) => t.topic.name),
+      topics: n.repositoryTopics.nodes.map((t) => t.topic.name).sort((a, b) => a.localeCompare(b)),
       languages: n.languages.nodes.map((l) => ({ name: l.name, color: l.color ?? '#888888' })),
       primary: n.primaryLanguage?.name ?? null,
     }))
