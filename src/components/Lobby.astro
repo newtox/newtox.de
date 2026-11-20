@@ -41,9 +41,8 @@ import { siSpotify } from 'simple-icons'
     <div class="acts" data-acts></div>
     <template data-act-tpl>
       <div class="slot">
-        <div class="art-wrap">
+        <div class="art-wrap" data-a-wrap>
           <img class="art" alt="" width="64" height="64" data-a-art />
-          <div class="art placeholder" data-a-placeholder></div>
           <img class="small" alt="" width="24" height="24" data-a-small />
         </div>
         <div class="info">
@@ -55,7 +54,8 @@ import { siSpotify } from 'simple-icons'
           <span class="sub" data-a-details></span>
           <span class="sub" data-a-state></span>
           <span class="clock" data-a-elapsed>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 15h10a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2Z"></path></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" data-a-screen><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm3 15h10a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2Z"></path></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true" data-a-pad><path d="M7.5 6h9A5.5 5.5 0 0 1 22 11.5v3.2a3.3 3.3 0 0 1-5.9 2L14.6 15H9.4l-1.5 1.7a3.3 3.3 0 0 1-5.9-2v-3.2A5.5 5.5 0 0 1 7.5 6ZM7 9a1 1 0 0 0-1 1v1H5a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2H8v-1a1 1 0 0 0-1-1Zm9.5 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Zm2 3a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"></path></svg>
             <span data-a-time></span>
           </span>
           <div data-a-bar>
@@ -115,11 +115,20 @@ import { siSpotify } from 'simple-icons'
   let current: Presence | null = null
   let shown: { a: Activity; el: HTMLElement }[] = []
 
-  const kinds: Record<number, { key: 'playing' | 'listeningTo' | 'watching' | 'competing'; icon: string }> = {
-    0: { key: 'playing', icon: '🎮' },
-    2: { key: 'listeningTo', icon: '🎧' },
-    3: { key: 'watching', icon: '📺' },
-    5: { key: 'competing', icon: '🏆' },
+  const kinds: Record<number, { key: 'playing' | 'listeningTo' | 'watching' | 'competing' }> = {
+    0: { key: 'playing' },
+    2: { key: 'listeningTo' },
+    3: { key: 'watching' },
+    5: { key: 'competing' },
+  }
+
+  let gameIcons: Promise<Record<string, string>> | null = null
+
+  function gameIcon(id: string) {
+    gameIcons ??= fetch('/game-icons.json')
+      .then((r) => (r.ok ? r.json() : {}))
+      .catch(() => ({}))
+    return gameIcons.then((m) => (m[id] ? `https://cdn.discordapp.com/app-icons/${id}/${m[id]}.png?size=160` : null))
   }
 
   function isSpotify(a: Activity) {
@@ -152,18 +161,15 @@ import { siSpotify } from 'simple-icons'
     const el = (tpl.content.firstElementChild as HTMLElement).cloneNode(true) as HTMLElement
     const kind = kinds[a.type]
     const img = activityImage(a)
+    const wrap = part(el, '[data-a-wrap]')
     const art = part<HTMLImageElement>(el, '[data-a-art]')
-    art.hidden = !img
-    const ph = part(el, '[data-a-placeholder]')
-    ph.hidden = !!img
-    ph.textContent = kind.icon
-    if (img) {
-      art.onerror = () => {
-        art.hidden = true
-        ph.hidden = false
-      }
-      art.src = img
-    }
+    wrap.hidden = true
+    art.onload = () => (wrap.hidden = false)
+    art.onerror = () => (wrap.hidden = true)
+    if (img) art.src = img
+    else if (a.type === 0 && a.application_id) gameIcon(a.application_id).then((src) => src && (art.src = src))
+    part(el, '[data-a-pad]').style.display = a.type === 0 ? '' : 'none'
+    part(el, '[data-a-screen]').style.display = a.type === 0 ? 'none' : ''
     const small = part<HTMLImageElement>(el, '[data-a-small]')
     const smallSrc = activityImage(a, true)
     small.hidden = !smallSrc
@@ -406,12 +412,6 @@ import { siSpotify } from 'simple-icons'
     object-fit: cover;
     border: 3px solid #14121b;
     background: #14121b;
-  }
-  .placeholder {
-    display: grid;
-    place-items: center;
-    font-size: 1.8rem;
-    background: var(--theirs);
   }
   .info {
     display: flex;
