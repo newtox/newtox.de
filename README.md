@@ -11,7 +11,7 @@ This work is licensed under a
 
 # newtox.de
 
-Personal website of Newtox aka Justin. Built with Astro as a fully static site, with a Splatfest-inspired look: click anywhere to splash ink, switch colors, and see my live Discord status. The interactive parts are small vanilla TypeScript scripts, everything else is plain HTML.
+Personal website of Newtox aka Justin. Built with Astro as a fully static site, with a Splatoon-inspired look: click anywhere to splash ink, switch colors, and see my live Discord status. The interactive parts are small vanilla TypeScript scripts, everything else is plain HTML.
 
 ## Features
 
