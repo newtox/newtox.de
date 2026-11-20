@@ -21,7 +21,6 @@ export const dict = {
     listeningTo: 'Listening to {name}',
     watching: 'Watching {name}',
     competing: 'Competing in {name}',
-    elapsed: 'elapsed',
     code: 'Code',
     aboutText: "Hi, I'm Justin. I code in my free time, mostly small things for myself and my friends.",
     yours: 'You',
@@ -52,7 +51,6 @@ export const dict = {
     listeningTo: 'Hört {name}',
     watching: 'Schaut {name} zu',
     competing: 'Tritt an bei {name}',
-    elapsed: 'vergangen',
     code: 'Code',
     aboutText:
       'Hi, ich bin Justin. Ich programmiere in meiner Freizeit, meistens Kleinigkeiten für mich und meine Freunde.',
